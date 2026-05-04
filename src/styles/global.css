@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-	--font-heading: "Libre Bodoni", ui-serif, Georgia, serif;
+	--font-heading: "Yeseva One", ui-serif, Georgia, serif;
 	--font-body: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
 	--aspect-vertical: 3 / 4; 
 

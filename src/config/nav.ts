@@ -35,6 +35,7 @@ export const navTree: NavItem[] = [
 
 export const navLabels: Record<'es' | 'ru', Record<string, string>> = {
 	es: {
+		nav_mobile_menu: 'Menú',
 		nav_home: 'Inicio',
 		nav_music: 'Música',
 		nav_music_solo: 'Solista',
@@ -50,6 +51,7 @@ export const navLabels: Record<'es' | 'ru', Record<string, string>> = {
 		nav_contact: 'Contacto',
 	},
 	ru: {
+		nav_mobile_menu: 'Меню',
 		nav_home: 'Главная',
 		nav_music: 'Музыка',
 		nav_music_solo: 'Солист',

@@ -28,7 +28,7 @@ function label(key: string): string {
 >
 	<div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-5">
 		<div class="min-w-0">
-			<a href={`${base}`} class="block font-heading text-2xl font-semibold text-[var(--color-text)] no-underline">
+			<a href={`${base}`} class="block font-heading text-lg md:text-2xl font-semibold text-[var(--color-text)] no-underline">
 				{site.title}
 			</a>
 			<span class="text-sm text-[var(--color-text-muted)]">{site.tagline}</span>
@@ -66,9 +66,12 @@ function label(key: string): string {
 			<div class="relative min-w-0 flex-1 md:contents">
 				<details class="md:hidden">
 					<summary
-						class="cursor-pointer list-none rounded border border-[var(--color-border)] px-2 py-1 text-sm marker:hidden [&::-webkit-details-marker]:hidden"
+						class="inline-flex h-8 w-9 cursor-pointer list-none items-center justify-center rounded border border-[var(--color-border)] text-[var(--color-text)] marker:hidden [&::-webkit-details-marker]:hidden"
+						aria-label={label('nav_mobile_menu')}
 					>
-						Menu
+						<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+							<path d="M4 7h16M4 12h16M4 17h16" />
+						</svg>
 					</summary>
 					<div
 						class="absolute left-0 top-full z-50 mt-1 max-h-[70vh] w-[min(14rem,calc(100vw-2rem))] overflow-y-auto rounded border border-[var(--color-border)] bg-[var(--color-surface)] p-2 shadow"

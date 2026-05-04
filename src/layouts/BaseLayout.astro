@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { THEME_STORAGE_KEY } from '../lib/theme';
+import { siteTitles } from '../config/nav';
 
 interface Props {
 	lang: 'es' | 'ru';
@@ -16,6 +17,21 @@ interface Props {
 const { lang, title, description, alternateHref, viewportShell = 'default' } = Astro.props;
 const homeHero = viewportShell === 'home-hero';
 const documentTitle = title.replace(/\s*\n\s*/g, ' ').replace(/\s+/g, ' ').trim();
+
+const site = Astro.site;
+const siteOrigin = site?.origin ?? Astro.url.origin;
+const canonicalHref = site ? new URL(Astro.url.pathname, site).href : Astro.url.href;
+const ogImageHref = site ? new URL('img/Home.jpg', site).href : `${siteOrigin}/img/Home.jpg`;
+
+const brand = siteTitles[lang];
+const ogTitle = `${brand.title} — ${brand.tagline}`;
+const defaultDescription =
+	lang === 'ru'
+		? 'Официальный сайт: музыка, литература, события и контакты.'
+		: 'Sitio oficial: música, literatura, actividades y contacto.';
+const metaDescription = description ?? defaultDescription;
+const ogLocale = lang === 'ru' ? 'ru_RU' : 'es_ES';
+const ogLocaleAlt = lang === 'ru' ? 'es_ES' : 'ru_RU';
 ---
 
 <!doctype html>
@@ -38,8 +54,23 @@ const documentTitle = title.replace(/\s*\n\s*/g, ' ').replace(/\s+/g, ' ').trim(
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		{description ? <meta name="description" content={description} /> : null}
+		<link rel="canonical" href={canonicalHref} />
+		<meta name="description" content={metaDescription} />
 		<title>{documentTitle}</title>
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content={brand.title} />
+		<meta property="og:title" content={ogTitle} />
+		<meta property="og:description" content={metaDescription} />
+		<meta property="og:url" content={canonicalHref} />
+		<meta property="og:image" content={ogImageHref} />
+		<meta property="og:image:type" content="image/jpeg" />
+		<meta property="og:image:alt" content={ogTitle} />
+		<meta property="og:locale" content={ogLocale} />
+		<meta property="og:locale:alternate" content={ogLocaleAlt} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={ogTitle} />
+		<meta name="twitter:description" content={metaDescription} />
+		<meta name="twitter:image" content={ogImageHref} />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link

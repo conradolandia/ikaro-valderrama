@@ -1,5 +1,13 @@
 ---
-const canonicalHref = Astro.site ? new URL('es/', Astro.site).href : '/es/';
+import { siteTitles } from '../config/nav';
+
+const site = Astro.site;
+const siteOrigin = site?.origin ?? Astro.url.origin;
+const canonicalHref = site ? new URL('es/', site).href : `${siteOrigin}/es/`;
+const ogImageHref = site ? new URL('img/Home.jpg', site).href : `${siteOrigin}/img/Home.jpg`;
+const brand = siteTitles.es;
+const ogTitle = `${brand.title} — ${brand.tagline}`;
+const metaDescription = 'Sitio oficial: música, literatura, actividades y contacto.';
 ---
 
 <!doctype html>
@@ -10,6 +18,21 @@ const canonicalHref = Astro.site ? new URL('es/', Astro.site).href : '/es/';
 		<title>Ikaro Valderrama</title>
 		<meta name="robots" content="noindex" />
 		<link rel="canonical" href={canonicalHref} />
+		<meta name="description" content={metaDescription} />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content={brand.title} />
+		<meta property="og:title" content={ogTitle} />
+		<meta property="og:description" content={metaDescription} />
+		<meta property="og:url" content={canonicalHref} />
+		<meta property="og:image" content={ogImageHref} />
+		<meta property="og:image:type" content="image/jpeg" />
+		<meta property="og:image:alt" content={ogTitle} />
+		<meta property="og:locale" content="es_ES" />
+		<meta property="og:locale:alternate" content="ru_RU" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={ogTitle} />
+		<meta name="twitter:description" content={metaDescription} />
+		<meta name="twitter:image" content={ogImageHref} />
 		<meta http-equiv="refresh" content="0;url=/es/" />
 		<style is:inline>
 			:root {

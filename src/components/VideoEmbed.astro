@@ -1,0 +1,48 @@
+---
+import { detectVideo } from '../lib/video';
+
+interface Props {
+	url: string;
+	title?: string;
+}
+
+const { url, title = 'Video' } = Astro.props;
+const { provider, id } = detectVideo(url);
+let vkOid: string | undefined;
+let vkVideoId: string | undefined;
+if (provider === 'vk') {
+	const i = id.indexOf('_');
+	vkOid = i >= 0 ? id.slice(0, i) : id;
+	vkVideoId = i >= 0 ? id.slice(i + 1) : '';
+}
+---
+
+<div class="video-embed my-6 aspect-video w-full max-w-3xl overflow-hidden rounded border border-[var(--color-border)] bg-black/5">
+	{
+		provider === 'youtube' ? (
+			<iframe
+				class="h-full w-full"
+				src={`https://www.youtube-nocookie.com/embed/${id}`}
+				title={title}
+				loading="lazy"
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+				allowfullscreen
+			/>
+		) : provider === 'vk' && vkOid && vkVideoId ? (
+			<iframe
+				class="h-full w-full"
+				src={`https://vk.com/video_ext.php?oid=${vkOid}&id=${vkVideoId}&hd=2`}
+				title={title}
+				loading="lazy"
+				allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+				allowfullscreen
+			/>
+		) : (
+			<p class="wrap-long-url p-4 text-sm text-[var(--color-text-muted)]">
+				<a href={url} class="text-[var(--color-accent)] underline" target="_blank" rel="noopener noreferrer">
+					{url}
+				</a>
+			</p>
+		)
+	}
+</div>

@@ -1,0 +1,26 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageView from '../../components/PageView.astro';
+
+export async function getStaticPaths() {
+	const entries = await getCollection('pagesRu');
+	return entries
+		.filter((e) => e.id !== 'home')
+		.map((e) => ({ params: { slug: e.id }, props: { id: e.id } }));
+}
+
+const lang = 'ru' as const;
+const { id } = Astro.props;
+const entry = await getEntry('pagesRu', id);
+if (!entry) return Astro.redirect('/ru/');
+
+const all = await getCollection('pagesRu');
+const other = await getEntry('pagesEs', id);
+const alternateHref = other ? `/es/${id}/` : '/es/';
+const title = String(entry.data.title ?? entry.id);
+---
+
+<BaseLayout lang={lang} title={title} alternateHref={alternateHref}>
+	<PageView lang={lang} entry={entry} all={all} />
+</BaseLayout>

@@ -1,0 +1,17 @@
+---
+import { getEntry, getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageView from '../../components/PageView.astro';
+
+const lang = 'ru' as const;
+const entry = await getEntry('pagesRu', 'home');
+if (!entry) throw new Error('Missing home page');
+const all = await getCollection('pagesRu');
+const other = await getEntry('pagesEs', 'home');
+const alternateHref = other ? '/es/' : undefined;
+const title = String(entry.data.title ?? 'Ikaro Valderrama');
+---
+
+<BaseLayout lang={lang} title={title} alternateHref={alternateHref} viewportShell="home-hero">
+	<PageView lang={lang} entry={entry} all={all} homeHeroShell />
+</BaseLayout>

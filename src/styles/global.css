@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+	--font-heading: "Libre Bodoni", ui-serif, Georgia, serif;
+	--font-body: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+
+	/* Sunny Lemonade Picnic — light */
+	--color-bg: #f4f2e1;
+	--color-surface: #f0e3d3;
+	--color-muted: #e0e2ce;
+	--color-border: #ccd2bb;
+	--color-text: #2a2620;
+	--color-text-muted: #5c564c;
+	--color-accent: #8b6914;
+}
+
+html.dark {
+	--color-bg: #1c1a16;
+	--color-surface: #252218;
+	--color-muted: #2e2a22;
+	--color-border: #3d382e;
+	--color-text: #f4f2e1;
+	--color-text-muted: #c9c4b8;
+	--color-accent: #e0c088;
+}
+
+html {
+	background: var(--color-bg);
+	color: var(--color-text);
+	font-family: var(--font-body);
+}
+
+body {
+	min-height: 100vh;
+}
+
+.font-heading {
+	font-family: var(--font-heading);
+}
+
+.prose-site {
+	--tw-prose-body: var(--color-text);
+	--tw-prose-headings: var(--color-text);
+	--tw-prose-links: var(--color-accent);
+	--tw-prose-bold: var(--color-text);
+	max-width: 65ch;
+	/* Long URLs and unbroken strings (inherited by inline content). */
+	overflow-wrap: anywhere;
+}
+
+.prose-site a {
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+/* Links whose label is a full URL (audio list, video fallback) — outside .prose-site. */
+.wrap-long-url {
+	overflow-wrap: anywhere;
+}

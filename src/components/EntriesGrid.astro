@@ -1,0 +1,42 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { publicImageSrc } from '../lib/images';
+
+interface Props {
+	lang: 'es' | 'ru';
+	entries: CollectionEntry<'pagesEs' | 'pagesRu'>[];
+}
+
+const { lang, entries } = Astro.props;
+const base = `/${lang}/`;
+
+const cards = entries.map((e) => {
+	const d = e.data as Record<string, unknown>;
+	const title = String(d.title ?? e.id);
+	const subtitle = d.subtitle != null ? String(d.subtitle) : '';
+	const img = publicImageSrc(d.image as string | undefined);
+	const href = `${base}${e.id}/`;
+	const bg = img
+		? `linear-gradient(to top, rgba(0,0,0,.75), transparent 60%), url('${img.replace(/'/g, '%27')}')`
+		: null;
+	return { title, subtitle, img, href, bg };
+});
+---
+
+<div class="my-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+	{
+		cards.map(({ title, subtitle, img, href, bg }) => (
+			<a
+				href={href}
+				class:list={[
+					'group relative flex aspect-square flex-col justify-end overflow-hidden rounded border border-[var(--color-border)] p-4 no-underline shadow-sm transition hover:opacity-95',
+					img ? 'text-white' : 'bg-[var(--color-surface)] text-[var(--color-text)]',
+				]}
+				style={bg ? { backgroundImage: bg, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
+			>
+				<span class="font-heading text-lg font-semibold drop-shadow">{title}</span>
+				{subtitle ? <span class="mt-1 text-sm opacity-90 drop-shadow">{subtitle}</span> : null}
+			</a>
+		))
+	}
+</div>

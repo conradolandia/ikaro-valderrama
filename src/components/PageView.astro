@@ -1,0 +1,132 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import { layoutKind } from '../lib/layout';
+import { publicImageSrc } from '../lib/images';
+import { resolveSections, filterEntriesByPrefix } from '../lib/sections';
+import ImageGallery from './ImageGallery.svelte';
+import VideoEmbed from './VideoEmbed.astro';
+import EntriesGrid from './EntriesGrid.astro';
+
+interface Props {
+	lang: 'es' | 'ru';
+	entry: CollectionEntry<'pagesEs' | 'pagesRu'>;
+	all: CollectionEntry<'pagesEs' | 'pagesRu'>[];
+	/** With BaseLayout viewportShell home-hero: hero fills remaining viewport, no horizontal letterboxing. */
+	homeHeroShell?: boolean;
+}
+
+const { lang, entry, all, homeHeroShell = false } = Astro.props;
+const { Content } = await render(entry);
+const data = entry.data as Record<string, unknown>;
+const body = entry.body;
+const kind = layoutKind(data.layout as string);
+const sections = resolveSections(data, body);
+const firstMarkdownIdx = sections.findIndex((s) => s.type === 'markdown');
+
+const title = String(data.title ?? entry.id);
+/** For <title>, alt, iframe — newlines from YAML `|` are flattened. */
+const titlePlain = title.replace(/\s*\n\s*/g, ' ').replace(/\s+/g, ' ').trim();
+const subtitle = data.subtitle != null ? String(data.subtitle) : '';
+const feat = publicImageSrc(data.image as string | undefined);
+
+const pos = (data.subtitlePosition as string) || 'sw';
+const posClass =
+	pos === 'nw'
+		? 'top-6 left-6 text-left'
+		: pos === 'ne'
+			? 'top-6 right-6 text-right'
+			: pos === 'se'
+				? 'bottom-6 right-6 text-right'
+				: 'bottom-6 left-6 text-left';
+---
+
+{
+	kind === 'hero' && feat ? (
+		<section
+			class:list={[
+				'relative flex w-full flex-col justify-end',
+				homeHeroShell
+					? 'min-h-0 flex-1'
+					: '-mx-4 min-h-[calc(100vh-5rem)] md:-mx-[max(0px,calc((100vw-72rem)/2))] md:w-screen md:max-w-none',
+			]}
+		>
+			<img src={feat} alt="" class="absolute inset-0 h-full w-full object-cover" fetchpriority="high" />
+			<div class="absolute inset-0 bg-gradient-to-t from-black/55 via-black/20 to-transparent" />
+			<div class:list={['absolute z-10 max-w-xl p-6 text-white', posClass]}>
+				<h1 class="font-heading whitespace-pre-line text-3xl font-bold drop-shadow md:text-4xl">{title}</h1>
+				{subtitle ? <p class="mt-2 text-lg opacity-95 drop-shadow">{subtitle}</p> : null}
+			</div>
+		</section>
+	) : (
+		<>
+			<header class="mb-8">
+				<h1 class="font-heading whitespace-pre-line text-3xl font-bold text-[var(--color-text)] md:text-4xl">{title}</h1>
+				{subtitle ? <p class="mt-2 text-lg text-[var(--color-text-muted)]">{subtitle}</p> : null}
+			</header>
+			{feat ? (
+				<figure class="mb-8 flex overflow-hidden rounded">
+					<img
+						src={feat}
+						alt={titlePlain}
+						class="block h-auto max-h-[28rem] w-auto max-w-full object-contain"
+						loading="lazy"
+					/>
+				</figure>
+			) : null}
+			{
+				sections.map((sec, i) => {
+					if (sec.type === 'markdown') {
+						if (i !== firstMarkdownIdx) return null;
+						return (
+							<div class="prose-site mb-8 [&_img]:max-w-full [&_p]:mb-4 [&_h2]:font-heading [&_h2]:mt-8 [&_h2]:text-xl [&_h3]:font-heading [&_h3]:mt-6">
+								<Content />
+							</div>
+						);
+					}
+					if (sec.type === 'entries') {
+						const list = filterEntriesByPrefix(all, sec.pathPrefix, entry.id);
+						return <EntriesGrid lang={lang} entries={list} />;
+					}
+					if (sec.type === 'images') {
+						return <ImageGallery client:load files={sec.files} alt={titlePlain} lang={lang} />;
+					}
+					if (sec.type === 'videos') {
+						return (
+							<div class="space-y-4">
+								{sec.urls.map((u) => (
+									<VideoEmbed url={u} title={titlePlain} />
+								))}
+							</div>
+						);
+					}
+					if (sec.type === 'audio') {
+						return (
+							<ul class="my-4 list-none space-y-2 p-0">
+								{sec.urls.map((u) => (
+									<li>
+										<a
+											href={u}
+											class="wrap-long-url text-[var(--color-accent)] underline"
+											target="_blank"
+											rel="noopener noreferrer"
+										>
+											{u}
+										</a>
+									</li>
+								))}
+							</ul>
+						);
+					}
+					return null;
+				})
+			}
+			{
+				firstMarkdownIdx === -1 && body?.trim() ? (
+					<div class="prose-site mb-8 [&_img]:max-w-full [&_p]:mb-4 [&_h2]:font-heading [&_h2]:mt-8 [&_h2]:text-xl [&_h3]:font-heading [&_h3]:mt-6">
+						<Content />
+					</div>
+				) : null
+			}
+		</>
+	)
+}

@@ -1,0 +1,30 @@
+---
+interface Props {
+	lang: 'es' | 'ru';
+}
+
+const { lang } = Astro.props;
+const gh = 'https://github.com/conradolandia';
+---
+
+<footer class="mt-16 border-t border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-6 text-center text-sm text-[var(--color-text-muted)]">
+	<p>
+		{
+			lang === 'es' ? (
+				<>
+					Sitio estático realizado con Astro, Tailwind CSS y Svelte | Diseño y programación:{' '}
+					<a href={gh} class="text-[var(--color-accent)] underline hover:opacity-90" target="_blank" rel="noopener noreferrer">
+						github.com/conradolandia
+					</a>
+				</>
+			) : (
+				<>
+					Статический сайт: Astro, Tailwind CSS и Svelte | Дизайн и программирование:{' '}
+					<a href={gh} class="text-[var(--color-accent)] underline hover:opacity-90" target="_blank" rel="noopener noreferrer">
+						github.com/conradolandia
+					</a>
+				</>
+			)
+		}
+	</p>
+</footer>

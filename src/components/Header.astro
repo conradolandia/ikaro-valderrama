@@ -1,0 +1,117 @@
+---
+import { navTree, navLabels, siteTitles } from '../config/nav';
+import ThemeToggle from './ThemeToggle.svelte';
+
+interface Props {
+	lang: 'es' | 'ru';
+	alternateHref?: string;
+}
+
+const { lang, alternateHref } = Astro.props;
+const labels = navLabels[lang];
+const site = siteTitles[lang];
+const base = `/${lang}/`;
+
+function hrefFor(item: (typeof navTree)[0]): string {
+	if (item.external) return item.external;
+	const path = item.href ?? '';
+	return path ? `${base}${path}/` : `${base}`;
+}
+
+function label(key: string): string {
+	return labels[key] ?? key;
+}
+---
+
+<header
+	class="sticky top-0 z-50 shrink-0 border-b border-[var(--color-border)] bg-[var(--color-bg)]/95 backdrop-blur supports-[backdrop-filter]:bg-[var(--color-bg)]/80"
+>
+	<div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-5">
+		<div class="min-w-0">
+			<a href={`${base}`} class="block font-heading text-2xl font-semibold text-[var(--color-text)] no-underline">
+				{site.title}
+			</a>
+			<span class="text-sm text-[var(--color-text-muted)]">{site.tagline}</span>
+		</div>
+		<div class="flex flex-wrap items-center gap-3 md:gap-4">
+			<nav class="hidden flex-wrap items-center gap-x-4 gap-y-2 text-sm md:flex" aria-label="Main">
+				{
+					navTree.map((item) =>
+						item.children ? (
+							<details class="group relative">
+								<summary class="cursor-pointer list-none text-[var(--color-text)] marker:hidden [&::-webkit-details-marker]:hidden">
+									<span class="border-b border-transparent group-open:border-[var(--color-accent)]">
+										{label(item.key)}
+									</span>
+								</summary>
+								<div class="absolute right-0 z-50 mt-1 min-w-48 rounded border border-[var(--color-border)] bg-[var(--color-surface)] p-2 shadow">
+									{item.children.map((ch) => (
+										<a
+											href={hrefFor(ch)}
+											class="block rounded px-2 py-1 text-[var(--color-text)] no-underline hover:bg-[var(--color-muted)]"
+										>
+											{label(ch.key)}
+										</a>
+									))}
+								</div>
+							</details>
+						) : (
+							<a href={hrefFor(item)} class="text-[var(--color-text)] no-underline hover:underline">
+								{label(item.key)}
+							</a>
+						),
+					)
+				}
+			</nav>
+			<details class="relative md:hidden">
+				<summary class="cursor-pointer rounded border border-[var(--color-border)] px-2 py-1 text-sm">Menu</summary>
+				<div
+					class="absolute right-0 z-50 mt-1 max-h-[70vh] w-56 overflow-y-auto rounded border border-[var(--color-border)] bg-[var(--color-surface)] p-2 text-sm shadow"
+				>
+					{
+						navTree.map((item) =>
+							item.children ? (
+								<div class="mb-2">
+									<div class="px-2 py-1 font-medium text-[var(--color-text-muted)]">{label(item.key)}</div>
+									{item.children.map((ch) => (
+										<a
+											href={hrefFor(ch)}
+											class="block rounded px-2 py-1 text-[var(--color-text)] no-underline hover:bg-[var(--color-muted)]"
+										>
+											{label(ch.key)}
+										</a>
+									))}
+								</div>
+							) : (
+								<a href={hrefFor(item)} class="mb-1 block rounded px-2 py-1 no-underline hover:bg-[var(--color-muted)]">
+									{label(item.key)}
+								</a>
+							),
+						)
+					}
+				</div>
+			</details>
+			<div
+				role="group"
+				class="flex items-center gap-2 sm:gap-3 ms-3 md:ms-6 md:border-l md:border-[var(--color-border)] md:ps-6"
+				aria-label={lang === 'es' ? 'Idioma y apariencia' : 'Язык и оформление'}
+			>
+				{
+					alternateHref ? (
+						<form method="get" action={alternateHref} class="m-0 inline p-0">
+							<button
+								type="submit"
+								class="inline-flex h-8 min-w-9 cursor-pointer items-center justify-center rounded border border-[var(--color-border)] bg-[var(--color-surface)] px-2 text-sm font-semibold text-[var(--color-accent)] outline-none transition-colors hover:bg-[var(--color-muted)] focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg)]"
+								lang={lang === 'es' ? 'ru' : 'es'}
+								aria-label={lang === 'es' ? 'Ver sitio en ruso' : 'Ver sitio en español'}
+							>
+								{lang === 'es' ? 'RU' : 'ES'}
+							</button>
+						</form>
+					) : null
+				}
+				<ThemeToggle client:load {lang} />
+			</div>
+		</div>
+	</div>
+</header>

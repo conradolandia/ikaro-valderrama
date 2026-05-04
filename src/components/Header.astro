@@ -63,34 +63,43 @@ function label(key: string): string {
 					)
 				}
 			</nav>
-			<details class="relative md:hidden">
-				<summary class="cursor-pointer rounded border border-[var(--color-border)] px-2 py-1 text-sm">Menu</summary>
-				<div
-					class="absolute right-0 z-50 mt-1 max-h-[70vh] w-56 overflow-y-auto rounded border border-[var(--color-border)] bg-[var(--color-surface)] p-2 text-sm shadow"
-				>
+			<div class="relative min-w-0 flex-1 md:contents">
+				<details class="md:hidden">
+					<summary
+						class="cursor-pointer list-none rounded border border-[var(--color-border)] px-2 py-1 text-sm marker:hidden [&::-webkit-details-marker]:hidden"
+					>
+						Menu
+					</summary>
+					<div
+						class="absolute left-0 top-full z-50 mt-1 max-h-[70vh] w-[min(14rem,calc(100vw-2rem))] overflow-y-auto rounded border border-[var(--color-border)] bg-[var(--color-surface)] p-2 shadow"
+					>
 					{
 						navTree.map((item) =>
 							item.children ? (
-								<div class="mb-2">
-									<div class="px-2 py-1 font-medium text-[var(--color-text-muted)]">{label(item.key)}</div>
+								<div class="mb-3">
+									<div class="px-2 py-1 text-base font-semibold text-[var(--color-text)]">{label(item.key)}</div>
 									{item.children.map((ch) => (
 										<a
 											href={hrefFor(ch)}
-											class="block rounded px-2 py-1 text-[var(--color-text)] no-underline hover:bg-[var(--color-muted)]"
+											class="ms-1 block rounded py-1.5 ps-4 text-sm text-[var(--color-text)] no-underline hover:bg-[var(--color-muted)]"
 										>
 											{label(ch.key)}
 										</a>
 									))}
 								</div>
 							) : (
-								<a href={hrefFor(item)} class="mb-1 block rounded px-2 py-1 no-underline hover:bg-[var(--color-muted)]">
+								<a
+									href={hrefFor(item)}
+									class="mb-1 block rounded px-2 py-1.5 text-base font-medium text-[var(--color-text)] no-underline hover:bg-[var(--color-muted)]"
+								>
 									{label(item.key)}
 								</a>
 							),
 						)
 					}
 				</div>
-			</details>
+				</details>
+			</div>
 			<div
 				role="group"
 				class="flex items-center gap-2 sm:gap-3 ms-3 md:ms-6 md:border-l md:border-[var(--color-border)] md:ps-6"

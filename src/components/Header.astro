@@ -142,6 +142,19 @@ function label(key: string): string {
 				},
 				true,
 			);
+			/* Close desktop submenus on outside click (bubble: clicks inside an open <details> are ignored). */
+			document.addEventListener('click', function (e) {
+				var target = e.target;
+				if (!(target instanceof Node)) return;
+				var openList = nav.querySelectorAll(':scope > details[open]');
+				if (!openList.length) return;
+				for (var i = 0; i < openList.length; i++) {
+					if (openList[i].contains(target)) return;
+				}
+				for (var j = 0; j < openList.length; j++) {
+					openList[j].removeAttribute('open');
+				}
+			});
 		})();
 	</script>
 </header>

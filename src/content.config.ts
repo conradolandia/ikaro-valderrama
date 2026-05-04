@@ -22,7 +22,7 @@ const pageFrontmatter = z
 		title: z.string(),
 		subtitle: z.string().optional(),
 		image: z.string().optional(),
-		layout: z.string(),
+		layout: z.enum(['hero', 'normal']),
 		sections: z.array(sectionSchema).optional(),
 		gallery: z.array(z.string()).optional(),
 		videos: z.array(z.string()).optional(),

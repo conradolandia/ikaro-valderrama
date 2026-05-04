@@ -1,6 +1,5 @@
 ---
 import { render, type CollectionEntry } from 'astro:content';
-import { layoutKind } from '../lib/layout';
 import { publicImageSrc } from '../lib/images';
 import { resolveSections, filterEntriesByPrefix } from '../lib/sections';
 import ImageGallery from './ImageGallery.svelte';
@@ -19,7 +18,7 @@ const { lang, entry, all, homeHeroShell = false } = Astro.props;
 const { Content } = await render(entry);
 const data = entry.data as Record<string, unknown>;
 const body = entry.body;
-const kind = layoutKind(data.layout as string);
+const kind = entry.data.layout;
 const sections = resolveSections(data, body);
 const firstMarkdownIdx = sections.findIndex((s) => s.type === 'markdown');
 

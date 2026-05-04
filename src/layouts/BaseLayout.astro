@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+/** PhotoSwipe CSS: static import avoids Vite CSS-chunk preload failures when `/_astro/*.css` is mis-served (e.g. Apache rewrite to HTML). */
+import 'photoswipe/style.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { THEME_STORAGE_KEY } from '../lib/theme';

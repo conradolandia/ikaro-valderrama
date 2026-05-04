@@ -51,7 +51,6 @@
 					return img ? setPswpDimensionsFromThumb(a, img) : Promise.resolve();
 				}),
 			);
-			await import('photoswipe/style.css');
 			const { default: PhotoSwipeLightbox } = await import('photoswipe/lightbox');
 			if (destroyed || !root) return;
 

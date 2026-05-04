@@ -21,6 +21,7 @@ Sitio estático para Ikaro Valderrama (Astro, Tailwind CSS, islas Svelte).
 2. Subir el contenido de `dist/` al directorio raíz del vhost (FTP, rsync, o `git pull` más CI que ejecute el build en el servidor si hay Node).
 3. Si el sitio no está en la raíz del dominio, definir `base` en `astro.config.mjs` y volver a construir.
 4. En Apache suele no hacer falta fallback tipo SPA: cada ruta es un directorio con `index.html` (URLs con barra final habilitadas).
+5. Si usas reglas de rewrite hacia `index.html`, excluir `/_astro/` (y en general los estáticos bajo `/img/`, etc.): si una petición a `/_astro/*.css` o `*.js` devuelve HTML, los módulos y estilos del build fallan en el navegador.
 
 ## Contenido
 

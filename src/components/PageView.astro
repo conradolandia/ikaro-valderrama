@@ -85,7 +85,7 @@ const posClass =
 					}
 					if (sec.type === 'entries') {
 						const list = filterEntriesByPrefix(all, sec.pathPrefix, entry.id);
-						return <EntriesGrid lang={lang} entries={list} />;
+						return <EntriesGrid lang={lang} entries={list} cardAspect={sec.cardAspect} />;
 					}
 					if (sec.type === 'images') {
 						return <ImageGallery client:load files={sec.files} alt={titlePlain} lang={lang} />;

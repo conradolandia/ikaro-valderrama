@@ -3,6 +3,7 @@
 @theme {
 	--font-heading: "Libre Bodoni", ui-serif, Georgia, serif;
 	--font-body: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+	--aspect-vertical: 3 / 4; 
 
 	/* Sunny Lemonade Picnic — light */
 	--color-bg: #f4f2e1;

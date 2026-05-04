@@ -10,9 +10,11 @@ const PAGES_PREFIX: Record<string, string> = {
 	kotodama: 'literatura/autor/kotodama',
 };
 
+export type EntriesCardAspect = 'square' | 'vertical';
+
 export type ResolvedSection =
 	| { type: 'markdown' }
-	| { type: 'entries'; pathPrefix: string }
+	| { type: 'entries'; pathPrefix: string; cardAspect?: EntriesCardAspect }
 	| { type: 'images'; files: string[] }
 	| { type: 'videos'; urls: string[] }
 	| { type: 'audio'; urls: string[] };
@@ -22,7 +24,11 @@ function frontmatterSectionToResolved(s: SectionFrontmatter): ResolvedSection {
 		case 'markdown':
 			return { type: 'markdown' };
 		case 'entries':
-			return { type: 'entries', pathPrefix: s.path };
+			return {
+				type: 'entries',
+				pathPrefix: s.path,
+				...(s.cardAspect != null ? { cardAspect: s.cardAspect } : {}),
+			};
 		case 'images':
 			return { type: 'images', files: [...s.files] };
 		case 'videos':

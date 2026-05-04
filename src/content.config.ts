@@ -4,7 +4,12 @@ import { z } from 'astro/zod';
 
 export const sectionSchema = z.discriminatedUnion('type', [
 	z.object({ type: z.literal('markdown') }),
-	z.object({ type: z.literal('entries'), path: z.string() }),
+	z.object({
+		type: z.literal('entries'),
+		path: z.string(),
+		/** Card shape for EntriesGrid; omit for square. */
+		cardAspect: z.enum(['square', 'vertical']).optional(),
+	}),
 	z.object({ type: z.literal('images'), files: z.array(z.string()) }),
 	z.object({ type: z.literal('videos'), urls: z.array(z.string()) }),
 	z.object({ type: z.literal('audio'), urls: z.array(z.string()) }),

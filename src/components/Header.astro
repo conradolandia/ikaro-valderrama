@@ -126,4 +126,22 @@ function label(key: string): string {
 			</div>
 		</div>
 	</div>
+	<script is:inline>
+		(() => {
+			const nav = document.querySelector('header nav[aria-label="Main"]');
+			if (!nav) return;
+			/* <details> toggle does not bubble; capture on document closes other desktop submenus. */
+			document.addEventListener(
+				'toggle',
+				function (e) {
+					var t = e.target;
+					if (!(t instanceof HTMLDetailsElement) || !t.open || !nav.contains(t)) return;
+					nav.querySelectorAll(':scope > details[open]').forEach(function (d) {
+						if (d !== t) d.removeAttribute('open');
+					});
+				},
+				true,
+			);
+		})();
+	</script>
 </header>
